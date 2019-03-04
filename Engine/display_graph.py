@@ -21,14 +21,24 @@ antY = [200,200,200,200]
 # Sample data
 
 def display(Z):
+    """
+    actually we can't display the graph ,the engine is the backend.
+    we just prepare the source picture for the UI.
+    """
     plt.clf()
-    plt.imshow(Z)
+    #plt.imshow(Z)
     plt.colorbar(shrink=.55)
     plt.scatter(antX, antY, color='red')
     plt.pause(1)
+    plt.savefig('test'+str(i)+'.jpg')#save the pic as the source to the UI 
 
 # Plot the density map using nearest-neighbor interpolation
-def the_route_volk():
+def the_route_volk(count):
+    """
+    this founction is used to invole the data-pre-trim as the multithread
+    the parameter:
+    count the number for the pic the number is 5 
+    """
     ph = d_p_e.ph_pricess()
     am = d_p_e.am_process()
     s = ca.basic_signal_construct(am, ph)
@@ -51,5 +61,5 @@ if __name__ =='__main__':
     ca.basic_signal_construct(am,ph)
     for i in range(5) :
         print('the routune')
-        the_route_volk()
+        the_route_volk(i)
     plt.ioff()
