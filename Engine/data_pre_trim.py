@@ -9,7 +9,7 @@ from config import THE_ANTENNA_NUM,THE_EXTRA_RATE
 # the new am ,in the future it may be replace by the rssi
 
 # the block get
-def ph_pricess():
+def ph_process():
     ph = []
     for i in range(THE_ANTENNA_NUM):
         block = antenna_list[i][0][0:THE_EXTRA_RATE]

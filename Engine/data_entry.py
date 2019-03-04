@@ -60,7 +60,5 @@ def the_data_extra():
 
 if __name__=='__main__':
     extra_PHASE_AND_RSSI()
-    print(antenna_list)
     #for i in range(THE_ANTENNA_NUM):
-    #    z = i
-    #    print('the length of '+str(z)+'is : ',len(antenna_list[i][0]),len(antenna_list[i][1]))
+    # print(antenna_list[i])

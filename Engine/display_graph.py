@@ -26,11 +26,12 @@ def display(Z):
     we just prepare the source picture for the UI.
     """
     plt.clf()
-    #plt.imshow(Z)
+    plt.imshow(Z)
     plt.colorbar(shrink=.55)
+    plt.savefig('../pic/test'+str(i)+'.png')#save the pic as the source to the UI 
     plt.scatter(antX, antY, color='red')
     plt.pause(1)
-    plt.savefig('test'+str(i)+'.jpg')#save the pic as the source to the UI 
+    
 
 # Plot the density map using nearest-neighbor interpolation
 def the_route_volk(count):
@@ -39,7 +40,7 @@ def the_route_volk(count):
     the parameter:
     count the number for the pic the number is 5 
     """
-    ph = d_p_e.ph_pricess()
+    ph = d_p_e.ph_process()
     am = d_p_e.am_process()
     s = ca.basic_signal_construct(am, ph)
     print(s)
@@ -56,7 +57,7 @@ class Threads(threading.Thread):
 if __name__ =='__main__':
     data_entry = Threads()
     data_entry.start()
-    ph = d_p_e.ph_pricess()
+    ph = d_p_e.ph_process()
     am = d_p_e.am_process()
     ca.basic_signal_construct(am,ph)
     for i in range(5) :

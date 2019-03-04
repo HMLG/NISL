@@ -97,7 +97,7 @@ class MainFrame(wx.Frame):
         """
         the pic from the engine diaplay_graph
         """
-        img_temp = wx.Image(r'.\pic\3.jpg',wx.BITMAP_TYPE_ANY).ConvertToBitmap()
+        img_temp = wx.Image(r'.\pic\test3.png',wx.BITMAP_TYPE_ANY).ConvertToBitmap()
         sb_temp = wx.StaticBitmap(self.panel,-1,img_temp,size=(300,300))
     
     def OnEndBnt(self,event):
@@ -105,7 +105,7 @@ class MainFrame(wx.Frame):
         the button should stop the program.
         i don't know how to do
         """
-        img_temp = wx.Image(r'.\pic\2.jpg',wx.BITMAP_TYPE_ANY).ConvertToBitmap()
+        img_temp = wx.Image(r'.\pic\test2.png',wx.BITMAP_TYPE_ANY).ConvertToBitmap()
         sb_temp = wx.StaticBitmap(self.panel,-1,img_temp,size=(300,300))
 
     def OnCloseMe(self,event):
