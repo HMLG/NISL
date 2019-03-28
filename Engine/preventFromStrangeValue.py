@@ -11,6 +11,9 @@ for antnum in range(THE_ANTENNA_NUM):
     """
     ant_num = antnum
     dir = r'F:/experience/13/Antenna'+str(antnum+1)+'.txt'
+    #The test file save all the fike in one just for test .
+    test_file = open(r'F:/experience/13/Antennatext.txt',mode='a+')
+    #
     with open(dir,'r')as file:
         for count in file:
             temp = (count.split('\t'))
@@ -20,9 +23,8 @@ for antnum in range(THE_ANTENNA_NUM):
                  err = antenna_list[ant_num][0][-1]
                  if abs(err-float(temp[0])) > 0.1*(err):
                      antenna_list[ant_num][0].append(float(err))
-            
                  else:  
                      antenna_list[ant_num][0].append(float(temp[0]))
-            
             antenna_list[ant_num][1].append(float(temp[1]))
-print(antenna_list)
+            test_file.write(count)
+test_file.close()
