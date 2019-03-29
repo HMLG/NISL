@@ -2,31 +2,31 @@ function Loc_m = DOA_Freespace()
  clc
  clear all
  close all
- %% ÕóÁÐÉèÖÃ
+ %% ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
  Fre=920.875*10^6;
  Lamuda=3*10^8/Fre;
- ds=0.08;  %ÕóÔª¼ä¸ô
- M=8;        %ÕóÔª¸öÊý
+ ds=0.08;  %ï¿½ï¿½Ôªï¿½ï¿½ï¿½
+ M=8;        %ï¿½ï¿½Ôªï¿½ï¿½ï¿½ï¿½
  ws=0.1;
- Xd=0:ds:(M-1)*ds;     %  ÕóÔªµÄÒ»Î¬×ø±ê,¾ùÔÈÏßÕó
- K=1;           %Tag¸öÊý
+ Xd=0:ds:(M-1)*ds;     %  ï¿½ï¿½Ôªï¿½ï¿½Ò»Î¬ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+ K=1;           %Tagï¿½ï¿½ï¿½ï¿½
  Level=10^4;
- %% µ¼ÈëÊý¾Ý
- % load Ture_LOSDOA.txt; %ÔØÈëÕæÊµLOSµÄDOA
+ %% ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+ % load Ture_LOSDOA.txt; %ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÊµLOSï¿½ï¿½DOA
  TagID = 1
  foldname=['E:\MUSIC\Data_Free\'];
  file=dir([foldname,'*.txt']);
  filename={file.name};
  L=length(filename);
  for p=1:L
-         load([foldname,char(filename(p))]); % ½«cellÀàÐÍ×ª³ÉstringÐÍ
+         load([foldname,char(filename(p))]); % ï¿½ï¿½cellï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½stringï¿½ï¿½
  end
  for p=1:M
          Antenna_name=['Antenna',num2str(p)];
          Tem = eval(Antenna_name);
-         Phase(TagID,p)=mean(Tem(:,1));       % »ñÈ¡ÏàÎ»
-         RSS(TagID,p)=mean(Tem(:,2));         % »ñÈ¡RSS
-         % ¼ÆËã¸´ÐÅºÅ
+         Phase(TagID,p)=mean(Tem(:,1));       % ï¿½ï¿½È¡ï¿½ï¿½Î»
+         RSS(TagID,p)=mean(Tem(:,2));         % ï¿½ï¿½È¡RSS
+         % ï¿½ï¿½ï¿½ã¸´ï¿½Åºï¿½
          S(TagID,p)=Rss2amp(RSS(TagID,p))*exp(i*Phase(TagID,p));
  end
  for k=1:K
