@@ -45,7 +45,7 @@ def the_route_volk(count):
     s = ca.basic_signal_construct(am, ph)
     print(s)
     the_show_data = ca.familiar_match(s)
-    display(the_show_data)
+    #display(the_show_data)
     time.sleep(1)
 
 #class just for the data entry
@@ -59,6 +59,7 @@ if __name__ =='__main__':
     data_entry.start()
     ph = d_p_e.ph_process()
     am = d_p_e.am_process()
+    time.sleep(1)
     ca.basic_signal_construct(am,ph)
     for i in range(5) :
         print('the routune')

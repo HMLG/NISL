@@ -35,7 +35,7 @@ def extra_PHASE_AND_RSSI():
     
     for antnum in range(THE_ANTENNA_NUM):
      ant_num = antnum
-     dir = r'F:/experience/13/Antenna'+str(antnum+1)+'.txt'
+     dir = r'E:/14/Antenna'+str(antnum+1)+'.txt'
      with open(dir,'r')as file:
          for count in file:
             temp = (count.split('\t'))
