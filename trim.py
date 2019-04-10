@@ -36,9 +36,9 @@ def extract(dir):
 
 if __name__=="__main__":
     """
-    revursive in the dir
+    recursive in the dir
     """
-    dir = r'E:\4-9'
+    dir = r'E:\4-9' ##the dir should have the layer struct,and the depth is 2.
     dirs = os.listdir(dir)
     print(dir)
     path=[]
