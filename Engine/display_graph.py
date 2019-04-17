@@ -1,6 +1,7 @@
 #multiprocess
 import time
 import threading
+import os
 #the data process
 import matplotlib.pyplot as plt
 #import pylab as plt
@@ -20,7 +21,7 @@ antX = [1,5,9,13]
 antY = [200,200,200,200]
 # Sample data
 
-def display(Z):
+def display(Z,i):
     """
     actually we can't display the graph ,the engine is the backend.
     we just prepare the source picture for the UI.
@@ -28,7 +29,7 @@ def display(Z):
     plt.clf()
     plt.imshow(Z)
     plt.colorbar(shrink=.55)
-    plt.savefig('../pic/test'+str(i)+'.png')#save the pic as the source to the UI 
+    plt.savefig('./pic/test'+str(i)+'.png')#save the pic as the source to the UI 
     plt.scatter(antX, antY, color='red')
     plt.pause(1)
     
@@ -45,7 +46,7 @@ def the_route_volk(count):
     s = ca.basic_signal_construct(am, ph)
     print(s)
     the_show_data = ca.familiar_match(s)
-    #display(the_show_data)
+    display(the_show_data,count)
     time.sleep(1)
 
 #class just for the data entry
@@ -54,14 +55,31 @@ class Threads(threading.Thread):
         d_e.extra_PHASE_AND_RSSI()
         print('over')
 
-if __name__ =='__main__':
+
+def sys_entry():
+    """
+    The func works as the system entry
+    It is an api to
+    """
     data_entry = Threads()
     data_entry.start()
     ph = d_p_e.ph_process()
     am = d_p_e.am_process()
     time.sleep(1)
     ca.basic_signal_construct(am,ph)
-    for i in range(5) :
+    for i in range(10) :
         print('the routune')
         the_route_volk(i)
     plt.ioff()
+if __name__ =='__main__':
+    # data_entry = Threads()
+    # data_entry.start()
+    # ph = d_p_e.ph_process()
+    # am = d_p_e.am_process()
+    # time.sleep(1)
+    # ca.basic_signal_construct(am,ph)
+    # for i in range(5) :
+    #     print('the routune')
+    #     the_route_volk(i)
+    # plt.ioff()
+    sys_entry()
