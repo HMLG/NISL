@@ -1,5 +1,6 @@
 #multiprocess
 import time
+print('has been loaded')
 import threading
 import os
 #the data process

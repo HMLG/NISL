@@ -1,6 +1,10 @@
-#
 import wx
 import os
+import sys
+sys.path.insert(0,'e:\\WORK\\NISL\\Engine')
+print(sys.path)
+import display_graph
+from display_graph import sys_entry
 # -*- coding: utf-8 -*-  
 class TheApp(wx.App):
     def OnInit(self):
@@ -93,12 +97,21 @@ class MainFrame(wx.Frame):
      #def OnPaint(self,event):
      #   buffer = wx.ClientDc(self.panel)
 
+    def OnStartBnt_True(self,event):
+        #pass
+        """
+        this func use the data to make the pic
+        """
+        sys_entry()
+
+
     def OnStartBnt(self,event):
         """
         the pic from the engine diaplay_graph
         """
-        img_temp = wx.Image(r'.\pic\test3.png',wx.BITMAP_TYPE_ANY).ConvertToBitmap()
-        sb_temp = wx.StaticBitmap(self.panel,-1,img_temp,size=(300,300))
+        sys_entry()
+        # img_temp = wx.Image(r'.\pic\test3.png',wx.BITMAP_TYPE_ANY).ConvertToBitmap()
+        # sb_temp = wx.StaticBitmap(self.panel,-1,img_temp,size=(300,300))
     
     def OnEndBnt(self,event):
         """
