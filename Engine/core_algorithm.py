@@ -51,7 +51,7 @@ def familiar_match(s):
                 pm.append(par0*cmath.exp(c))
             PIXEL[i-1][n-1] = abs(sum(pm))
             pm.clear()
-    print(np.where(PIXEL==np.max(PIXEL)))
-    return  PIXEL
+    # print(np.where(PIXEL==np.max(PIXEL)))
+    return  PIXEL,np.where(PIXEL==np.max(PIXEL))
 
 

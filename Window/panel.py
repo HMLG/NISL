@@ -3,8 +3,10 @@ import os
 import sys
 sys.path.insert(0,'e:\\WORK\\NISL\\Engine')
 print(sys.path)
+
 import display_graph
 from display_graph import sys_entry
+#import matlab.engine
 # -*- coding: utf-8 -*-  
 class TheApp(wx.App):
     def OnInit(self):
@@ -25,18 +27,22 @@ class MainFrame(wx.Frame):
     def __init__(self,parent,
                  id=wx.ID_ANY,title='location system ------ NISL',
                  pos=wx.DefaultPosition,
-                 size=(690,470),
+                 size=(850,600),
                  style=wx.DEFAULT_FRAME_STYLE^wx.RESIZE_BORDER^wx.MINIMIZE_BOX^wx.MAXIMIZE_BOX,
                  name='location system ------ NISL'):
         
         super(MainFrame,self).__init__(None,id,title,pos,size,style,name)
+        #the pic number
         self.maxPage = 10
         self.pageNum = 0
-        self.panel = wx.Panel(self,size=(400,400))#the back ground panel
+        #the matlab engine
+        #self.eng = matlab.engine.start_matlab('MATLAB_R2017b')
+
+        self.panel = wx.Panel(self,size=(700,500))#the back ground panel
         self.makeMenuBar()
         self.makePanel()
         self.CreateStatusBar()
-        self.SetStatusText((os.getcwd()))
+        self.SetStatusText(("The work directoy is "+os.getcwd()))
 
     def makePanel(self):
         main_Hbox = wx.BoxSizer(wx.HORIZONTAL)
@@ -63,9 +69,9 @@ class MainFrame(wx.Frame):
 
         #the button below
         start_Bnt = wx.Button(self.panel,-1,'START')
-        end_Bnt = wx.Button(self.panel,-1,'NEXT')      
+        next_Bnt = wx.Button(self.panel,-1,'NEXT')      
         bntbar_VStaticboxsizer.Add(start_Bnt,1,flag=wx.EXPAND)
-        bntbar_VStaticboxsizer.Add(end_Bnt,1,flag=wx.EXPAND)
+        bntbar_VStaticboxsizer.Add(next_Bnt,1,flag=wx.EXPAND)
        
         bntbar_VStaticboxsizer.Add((20,40))
         bntbar_VStaticboxsizer.Add(x_coordinate_HBoxSizer,1,wx.EXPAND)
@@ -80,7 +86,7 @@ class MainFrame(wx.Frame):
         img_test = wx.Image(r'.\pic\8.jpg',wx.BITMAP_TYPE_ANY)
         w = img_test.GetWidth()
         h = img_test.GetHeight()
-        img_test = img_test.Scale(w/5,h/5).ConvertToBitmap()
+        img_test = img_test.Scale(w/4,h/4).ConvertToBitmap()
         sb_test = wx.StaticBitmap(self.panel,-1,img_test,size=(300,300))
         #the main_Hbox add all elements
         main_Hbox.Add(sb_test,3,wx.ALL,10)
@@ -89,7 +95,7 @@ class MainFrame(wx.Frame):
         # bind the function here
         self.Bind(wx.EVT_BUTTON,self.OnCloseMe,quit_Bnt)
         self.Bind(wx.EVT_BUTTON,self.OnStartBnt,start_Bnt)
-        self.Bind(wx.EVT_BUTTON,self.OnEndBnt,end_Bnt)
+        self.Bind(wx.EVT_BUTTON,self.OnNextBnt,next_Bnt)
         #All distribution here
         self.panel.SetSizer(main_Hbox)
         self.panel.SetBackgroundColour('white')
@@ -98,38 +104,46 @@ class MainFrame(wx.Frame):
      #def OnPaint(self,event):
      #   buffer = wx.ClientDc(self.panel)
 
-    def OnStartBnt_True(self,event):
-        #pass
-        """
-        this func use the data to make the pic
-        """
-        sys_entry()
+    # def OnStartBnt_True(self,event):
+    #     #pass
+    #     """
+    #     this func use the data to make the pic
+    #     """
+    #     sys_entry()
 
 
     def OnStartBnt(self,event):
         """
         the pic from the engine diaplay_graph
         """
+        self.SetStatusText("Working !!!!!")
         self.pageNum = 0
         sys_entry()
+        self.SetStatusText("Finish !!!!!")
         # img_temp = wx.Image(r'.\pic\test3.png',wx.BITMAP_TYPE_ANY).ConvertToBitmap()
         # sb_temp = wx.StaticBitmap(self.panel,-1,img_temp,size=(300,300))
         
-    def OnEndBnt(self,event):
+    def OnNextBnt(self,event):
         """
         the button should stop the program.
         i don't know how to do
+        so i change the bnt name and
+        i think is great to simplify the function
         """
-        img_temp = wx.Image(r'.\pic\test'+str(self.pageNum)+'.png',wx.BITMAP_TYPE_ANY).ConvertToBitmap()
-        sb_temp = wx.StaticBitmap(self.panel,-1,img_temp,size=(400,420))
-        #update the position
-        self.xvalue_StaticText.SetValue('100')
-        self.yvalue_StaticText.SetValue('100')
+        try :
+
+         img_temp = wx.Image(r'.\pic\test'+str(self.pageNum)+'.png',wx.BITMAP_TYPE_ANY).ConvertToBitmap()
+         sb_temp = wx.StaticBitmap(self.panel,-1,img_temp,size=(580,460))
+         #update the position
+         self.xvalue_StaticText.SetValue('100')
+         self.yvalue_StaticText.SetValue('100')
         #
-        self.pageNum += 1
-        if self.pageNum >= self.maxPage:
-            wx.MessageBox("This is the last pic,Will show the beginning")
-            self.pageNum = self.pageNum % self.maxPage
+         self.pageNum += 1
+         if self.pageNum >= self.maxPage:
+             wx.MessageBox("This is the last pic,Will show the beginning")
+             self.pageNum = self.pageNum % self.maxPage
+        except :
+            wx.MessageBox("Please do the Start before !")
 
     def OnCloseMe(self,event):
         self.Close(True)

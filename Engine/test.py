@@ -3,12 +3,12 @@ import matlab
 import matlab.engine
 import time
 #the music.m called by python
-path = r"E:/1/"
+path = r"E:/3-29/1/"
 if __name__ == '__main__':
     print(time.asctime(time.localtime(time.time())))
     eng = matlab.engine.start_matlab('MATLAB_R2017b')
     #fun  = eng.Music()
-    fun_opt = eng.DOA_Freespace()
+    fun_opt = eng.DOA_Freespace(path)
     #fun_opt = eng.DOA_Freespace_Calibration()
     #print('the coordination is below :')
     #print(fun)
