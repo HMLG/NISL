@@ -25,13 +25,14 @@ class MainFrame(wx.Frame):
     def __init__(self,parent,
                  id=wx.ID_ANY,title='location system ------ NISL',
                  pos=wx.DefaultPosition,
-                 size=(490,400),
+                 size=(690,470),
                  style=wx.DEFAULT_FRAME_STYLE^wx.RESIZE_BORDER^wx.MINIMIZE_BOX^wx.MAXIMIZE_BOX,
                  name='location system ------ NISL'):
         
         super(MainFrame,self).__init__(None,id,title,pos,size,style,name)
-
-        self.panel = wx.Panel(self,size=(400,300))#the back ground panel
+        self.maxPage = 10
+        self.pageNum = 0
+        self.panel = wx.Panel(self,size=(400,400))#the back ground panel
         self.makeMenuBar()
         self.makePanel()
         self.CreateStatusBar()
@@ -49,20 +50,20 @@ class MainFrame(wx.Frame):
         #the coordination below just for look(read only)
         x_StaticText = wx.StaticText(self.panel,-1,'x :->')
         y_StaticText = wx.StaticText(self.panel,-1,'y :->')
-        xvalue_StaticText = wx.StaticText(self.panel,-1,'0')
-        yvalue_StaticText = wx.StaticText(self.panel,-1,'0')
+        self.xvalue_StaticText = wx.TextCtrl(self.panel,-1,'0',style=wx.TE_READONLY)
+        self.yvalue_StaticText = wx.TextCtrl(self.panel,-1,'0',style=wx.TE_READONLY)
 
         x_coordinate_HBoxSizer = wx.BoxSizer(wx.HORIZONTAL)
         y_coordinate_HBoxSizer = wx.BoxSizer(wx.HORIZONTAL)
 
         x_coordinate_HBoxSizer.Add(x_StaticText,1,wx.EXPAND)
-        x_coordinate_HBoxSizer.Add(xvalue_StaticText,1,wx.EXPAND)
+        x_coordinate_HBoxSizer.Add(self.xvalue_StaticText,1,wx.EXPAND)
         y_coordinate_HBoxSizer.Add(y_StaticText,1,wx.EXPAND)
-        y_coordinate_HBoxSizer.Add(yvalue_StaticText,1,wx.EXPAND)
+        y_coordinate_HBoxSizer.Add(self.yvalue_StaticText,1,wx.EXPAND)
 
         #the button below
-        start_Bnt = wx.Button(self.panel,-1,'Start')
-        end_Bnt = wx.Button(self.panel,-1,'End')      
+        start_Bnt = wx.Button(self.panel,-1,'START')
+        end_Bnt = wx.Button(self.panel,-1,'NEXT')      
         bntbar_VStaticboxsizer.Add(start_Bnt,1,flag=wx.EXPAND)
         bntbar_VStaticboxsizer.Add(end_Bnt,1,flag=wx.EXPAND)
        
@@ -109,17 +110,26 @@ class MainFrame(wx.Frame):
         """
         the pic from the engine diaplay_graph
         """
+        self.pageNum = 0
         sys_entry()
         # img_temp = wx.Image(r'.\pic\test3.png',wx.BITMAP_TYPE_ANY).ConvertToBitmap()
         # sb_temp = wx.StaticBitmap(self.panel,-1,img_temp,size=(300,300))
-    
+        
     def OnEndBnt(self,event):
         """
         the button should stop the program.
         i don't know how to do
         """
-        img_temp = wx.Image(r'.\pic\test2.png',wx.BITMAP_TYPE_ANY).ConvertToBitmap()
-        sb_temp = wx.StaticBitmap(self.panel,-1,img_temp,size=(300,300))
+        img_temp = wx.Image(r'.\pic\test'+str(self.pageNum)+'.png',wx.BITMAP_TYPE_ANY).ConvertToBitmap()
+        sb_temp = wx.StaticBitmap(self.panel,-1,img_temp,size=(400,420))
+        #update the position
+        self.xvalue_StaticText.SetValue('100')
+        self.yvalue_StaticText.SetValue('100')
+        #
+        self.pageNum += 1
+        if self.pageNum >= self.maxPage:
+            wx.MessageBox("This is the last pic,Will show the beginning")
+            self.pageNum = self.pageNum % self.maxPage
 
     def OnCloseMe(self,event):
         self.Close(True)

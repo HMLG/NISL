@@ -1,6 +1,6 @@
 #multiprocess
 import time
-print('has been loaded')
+
 import threading
 import os
 #the data process
@@ -12,6 +12,7 @@ import data_entry as d_e
 
 import data_pre_trim as d_p_e
 import core_algorithm as ca
+print('All packages have been loaded')
 #the axes set
 plt.ion()
 xside = np.linspace(0,2,200)
@@ -28,11 +29,13 @@ def display(Z,i):
     we just prepare the source picture for the UI.
     """
     plt.clf()
+    #plt.gcf()
     plt.imshow(Z)
     plt.colorbar(shrink=.55)
-    plt.savefig('./pic/test'+str(i)+'.png')#save the pic as the source to the UI 
     plt.scatter(antX, antY, color='red')
-    plt.pause(1)
+    plt.savefig('./pic/test'+str(i)+'.png')#save the pic as the source to the UI 
+    
+    #plt.pause(1)
     
 
 # Plot the density map using nearest-neighbor interpolation
@@ -40,15 +43,15 @@ def the_route_volk(count):
     """
     this founction is used to invole the data-pre-trim as the multithread
     the parameter:
-    count the number for the pic the number is 5 
+    count the number for the pic the number is 10
     """
     ph = d_p_e.ph_process()
     am = d_p_e.am_process()
     s = ca.basic_signal_construct(am, ph)
-    print(s)
+    #print(s)
     the_show_data = ca.familiar_match(s)
     display(the_show_data,count)
-    time.sleep(1)
+    #time.sleep(0.2)
 
 #class just for the data entry
 class Threads(threading.Thread):
@@ -64,14 +67,17 @@ def sys_entry():
     """
     data_entry = Threads()
     data_entry.start()
+    time.sleep(1)
     ph = d_p_e.ph_process()
     am = d_p_e.am_process()
-    time.sleep(1)
+    
     ca.basic_signal_construct(am,ph)
     for i in range(10) :
         print('the routune')
         the_route_volk(i)
     plt.ioff()
+    plt.close()
+
 if __name__ =='__main__':
     # data_entry = Threads()
     # data_entry.start()
