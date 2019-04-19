@@ -72,6 +72,7 @@ def the_route_volk(count):
     the_show_data, position = ca.familiar_match(s)
     display(the_show_data,count)
     #time.sleep(0.2)
+    return position
 
 #class just for the data entry
 class Threads(threading.Thread):
@@ -90,13 +91,14 @@ def sys_entry():
     time.sleep(1)
     ph = d_p_e.ph_process()
     am = d_p_e.am_process()
-    
+    position = []
     ca.basic_signal_construct(am,ph)
     for i in range(10) :
         print('the routune : '+str(i))
-        the_route_volk(i)
+        position.append(the_route_volk(i))
     plt.ioff()
     plt.close()
+    return position
 
 if __name__ =='__main__':
     # data_entry = Threads()

@@ -35,8 +35,9 @@ class MainFrame(wx.Frame):
         #the pic number
         self.maxPage = 10
         self.pageNum = 0
-        #the matlab engine
+        #the matlab engine crash so use my algorithm
         #self.eng = matlab.engine.start_matlab('MATLAB_R2017b')
+        self.position =[]
 
         self.panel = wx.Panel(self,size=(700,500))#the back ground panel
         self.makeMenuBar()
@@ -118,7 +119,7 @@ class MainFrame(wx.Frame):
         """
         self.SetStatusText("Working !!!!!")
         self.pageNum = 0
-        sys_entry()
+        self.position = sys_entry()
         self.SetStatusText("Finish !!!!!")
         # img_temp = wx.Image(r'.\pic\test3.png',wx.BITMAP_TYPE_ANY).ConvertToBitmap()
         # sb_temp = wx.StaticBitmap(self.panel,-1,img_temp,size=(300,300))
@@ -131,17 +132,21 @@ class MainFrame(wx.Frame):
         i think is great to simplify the function
         """
         try :
+         if self.position == [] :
+             raise Exception
+         else:
+          img_temp = wx.Image(r'.\pic\test'+str(self.pageNum)+'.png',wx.BITMAP_TYPE_ANY).ConvertToBitmap()
+          sb_temp = wx.StaticBitmap(self.panel,-1,img_temp,size=(580,460))
+          #update the position
+          self.xvalue_StaticText.SetValue(str(int(self.position[self.pageNum][1])))
+          self.yvalue_StaticText.SetValue(str(int(self.position[self.pageNum][0]*1)))
 
-         img_temp = wx.Image(r'.\pic\test'+str(self.pageNum)+'.png',wx.BITMAP_TYPE_ANY).ConvertToBitmap()
-         sb_temp = wx.StaticBitmap(self.panel,-1,img_temp,size=(580,460))
-         #update the position
-         self.xvalue_StaticText.SetValue('100')
-         self.yvalue_StaticText.SetValue('100')
-        #
-         self.pageNum += 1
+          print(self.position[self.pageNum][0])
+
+          self.pageNum += 1
          if self.pageNum >= self.maxPage:
-             wx.MessageBox("This is the last pic,Will show the beginning")
-             self.pageNum = self.pageNum % self.maxPage
+              wx.MessageBox("This is the last pic,Will show the beginning")
+              self.pageNum = self.pageNum % self.maxPage
         except :
             wx.MessageBox("Please do the Start before !")
 

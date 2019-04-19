@@ -1,7 +1,5 @@
 import os
 
-
-
 def extract(dir):
     """
     This func is used to extract the message from the txt file.
@@ -20,8 +18,7 @@ def extract(dir):
         for line in source:
             # print(line)
             segementation = line.split('\t')
-            #print(segementation[:])
-            #print('\n')
+
             if segementation[4]  not in tag:
                 print(segementation[4])
                 tag.append(segementation[4])
