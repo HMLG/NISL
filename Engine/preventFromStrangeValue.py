@@ -1,30 +1,47 @@
 #-*- coding:utf-8 -*-
 from config import THE_ANTENNA_NUM,antenna_list
-
-for antnum in range(THE_ANTENNA_NUM):
+import os
+def dataRestore(position):
     """
     this func will be used to eliminate the strange value in the ph 
     in the select sentences.
     use the last value in the list and the abs of the (last value - current value )
     is the boundy of the strange value.
     it's tough.
+    And the file will be restore at the seq(means sequence )
+    every 50 lines as a slot.
+    postion is the last tell return value
     """
-    ant_num = antnum
-    dir = r'F:/experience/13/Antenna'+str(antnum+1)+'.txt'
-    #The test file save all the fike in one just for test .
-    test_file = open(r'F:/experience/13/Antennatext.txt',mode='a+')
-    #
-    with open(dir,'r')as file:
-        for count in file:
-            temp = (count.split('\t'))
-            if (len(antenna_list[ant_num][0])==0):
-                antenna_list[ant_num][0].append(float(temp[0]))
-            else:
-                 err = antenna_list[ant_num][0][-1]
-                 if abs(err-float(temp[0])) > 0.1*(err):
-                     antenna_list[ant_num][0].append(float(err))
-                 else:  
-                     antenna_list[ant_num][0].append(float(temp[0]))
-            antenna_list[ant_num][1].append(float(temp[1]))
-            test_file.write(count)
-test_file.close()
+    path = r'E:/4-23/1/'
+    cwd = path.split('/')#get the current work directory
+    mkdir = '/'.join([cwd[0],cwd[1],cwd[2],'seq'])
+    #print(mkdir) # It is used to check the mkdir path 
+    if os.path.exists(mkdir):
+        pass # if the dir is exists
+    else:
+        os.mkdir(mkdir)
+    #print(cwd,mkdir) #this is used to test the path
+    for antnum in range(THE_ANTENNA_NUM):
+        txt_name=['Fre920.625','Antenna2','Antenna3','Antenna4']
+        txt_restore=['Antenna1','Antenna2','Antenna3','Antenna4']
+        dir = path+txt_name[antnum]+'.txt'
+        # print(dir) # this is used to test the file
+        count = 0 # every 50 lines as a block
+        with open(mkdir+'/'+txt_restore[antnum]+'.txt','w') as file_in:
+            with open(dir,'r')as file_out: # this is the data sources
+                file_out.seek(position[antnum],0)
+                # for line in file_out:
+                while count < 50:
+                    line = file_out.readline()
+                    sample = line.split('\t')
+                    file_in.writelines(sample[0]+'\n')
+                    count = count + 1
+                else :
+                    position[antnum]= file_out.tell()
+    return position                      
+
+if __name__=="__main__":
+    position = dataRestore([0,0,0,0])
+    print(position)
+    position = dataRestore(position)
+    print(position)

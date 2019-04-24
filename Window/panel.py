@@ -3,13 +3,14 @@ import os
 import sys
 sys.path.insert(0,'e:\\WORK\\NISL\\Engine')
 print(sys.path)
-
+import matlab.engine
 import display_graph
 from display_graph import sys_entry
 #import matlab.engine
 # -*- coding: utf-8 -*-  
 class TheApp(wx.App):
     def OnInit(self):
+        self.locale = wx.Locale(wx.LANGUAGE_ENGLISH_US)
         self.frame = MainFrame(None)
         self.SetTopWindow(self.frame)
         self.frame.Show()
@@ -27,7 +28,7 @@ class MainFrame(wx.Frame):
     def __init__(self,parent,
                  id=wx.ID_ANY,title='location system ------ NISL',
                  pos=wx.DefaultPosition,
-                 size=(850,600),
+                 size=(880,600),
                  style=wx.DEFAULT_FRAME_STYLE^wx.RESIZE_BORDER^wx.MINIMIZE_BOX^wx.MAXIMIZE_BOX,
                  name='location system ------ NISL'):
         
@@ -133,13 +134,13 @@ class MainFrame(wx.Frame):
         """
         try :
          if self.position == [] :
-             raise Exception
+             pass
          else:
           img_temp = wx.Image(r'.\pic\test'+str(self.pageNum)+'.png',wx.BITMAP_TYPE_ANY).ConvertToBitmap()
-          sb_temp = wx.StaticBitmap(self.panel,-1,img_temp,size=(580,460))
+          sb_temp = wx.StaticBitmap(self.panel,-1,img_temp,size=(610,460))
           #update the position
           self.xvalue_StaticText.SetValue(str(int(self.position[self.pageNum][1])))
-          self.yvalue_StaticText.SetValue(str(int(self.position[self.pageNum][0]*1)))
+          self.yvalue_StaticText.SetValue(str(int(self.position[self.pageNum][0])))
 
           print(self.position[self.pageNum][0])
 
@@ -147,8 +148,8 @@ class MainFrame(wx.Frame):
          if self.pageNum >= self.maxPage:
               wx.MessageBox("This is the last pic,Will show the beginning")
               self.pageNum = self.pageNum % self.maxPage
-        except :
-            wx.MessageBox("Please do the Start before !")
+        except FileExistsError:
+              wx.MessageBox("Please do the Start before !")
 
     def OnCloseMe(self,event):
         self.Close(True)

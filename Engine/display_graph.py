@@ -20,22 +20,20 @@ xside = np.linspace(0,2,200)
 yside = np.linspace(0,2,200)
 X,Y = np.meshgrid(xside,yside)
 #the antenna coordination
-antX = [1,5,9,13]
-antY = [200,200,200,200]
+antX = [3,7,11,15]
+antY = [2,2,2,2]# y axes do not set [0,0,0,0]
 # Sample data
 
-def display(Z,i):
+def display(Z,pos,i):
     """
     actually we can't display the graph ,the engine is the backend.
     we just prepare the source picture for the UI.
     """
     plt.clf()
 
-    # plt.imshow(Z)
-    # plt.colorbar(shrink=.55)
-    # plt.scatter(antX, antY, color='red')
-    # plt.savefig('./pic/test'+str(i)+'.png')#save the pic as the source to the UI 
-    
+    plt.title('Indoor Location System')
+    plt.xlabel("X  0.8cm/pixel")
+    plt.ylabel("Y  0.8cm/pixel")
     def f(z): 
         """
         This function just set the Z to the Z axes,
@@ -52,6 +50,10 @@ def display(Z,i):
     crb = plt.colorbar(shrink=.55)
     crb.set_ticklabels(["5%","20%","30%","40%","50%","60%","70%","95%","99%"])
     # C = contour(X, Y, f(Z), 8, colors='black', linewidth=0.01)
+    plt.scatter(antX, antY, color='cyan', marker='^')
+    plt.scatter(pos[1],pos[0]-2,color='black',marker='*')
+    plt.annotate('Target',xy=(pos[1],pos[0]-4),xytext=(pos[1]-20,pos[0]-22),arrowprops=dict(facecolor='black',headwidth=0.1,width=0.01, shrink=0.01))
+    plt.annotate('Antenna Array',xy=(antX[0],antY[0]+2),xytext=(antX[0]+20,antY[0]+22),arrowprops=dict(facecolor='black',headwidth=0.1,width=0.01, shrink=0.01))
     plt.savefig('./pic/test'+str(i)+'.png')#save the pic as the source to the UI 
 
     #show()
@@ -70,7 +72,7 @@ def the_route_volk(count):
     s = ca.basic_signal_construct(am, ph)
     #print(s)
     the_show_data, position = ca.familiar_match(s)
-    display(the_show_data,count)
+    display(the_show_data,position,count)
     #time.sleep(0.2)
     return position
 
@@ -93,7 +95,7 @@ def sys_entry():
     am = d_p_e.am_process()
     position = []
     ca.basic_signal_construct(am,ph)
-    for i in range(10) :
+    for i in range(3) :
         print('the routune : '+str(i))
         position.append(the_route_volk(i))
     plt.ioff()

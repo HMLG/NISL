@@ -18,13 +18,13 @@ XGRIDSIZE=200
 XX=XGRIDSIZE-1
 YGRIDSIZE=200
 PIXEL=np.zeros((XGRIDSIZE,YGRIDSIZE))
-XGRID2TRUE=1.60/XGRIDSIZE
-YGRID2TRUE=1.60/YGRIDSIZE
+XGRID2TRUE=2.00/XGRIDSIZE
+YGRID2TRUE=2.00/YGRIDSIZE
 
 # the antennae array coordiantion
 #COUNT = THE_ANTENNA_NUM
-X = [1.60,1.60,1.60,1.60]
-Y = np.linspace(0.0,0.16,THE_ANTENNA_NUM).tolist()#y is a metric [the_antenna,1]  to optional to a list
+X = [2.00,2.00,2.00,2.00]
+Y = np.linspace(0.0,0.24,THE_ANTENNA_NUM).tolist()#y is a metric [the_antenna,1]  to optional to a list
 #np.zeros((THE_ANTENNA_NUM,1)).tolist()
 
 #the new signal   S=Am'.*exp(1i*ph');
