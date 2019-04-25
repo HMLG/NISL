@@ -1,6 +1,8 @@
 import wx
 import os
 import sys
+import time
+from multiprocessing import Process
 sys.path.insert(0,'e:\\WORK\\NISL\\Engine')
 print(sys.path)
 import matlab.engine
@@ -33,13 +35,16 @@ class MainFrame(wx.Frame):
                  name='location system ------ NISL'):
         
         super(MainFrame,self).__init__(None,id,title,pos,size,style,name)
-        #the pic number
-        self.maxPage = 10
+        #show the pic number
+        self.running = False # the condition 
         self.pageNum = 0
+        self.timer = wx.Timer(self)
+        self.Bind(wx.EVT_TIMER,self.showpic,self.timer)
+        self.timer.Start(5000)
         #the matlab engine crash so use my algorithm
         #self.eng = matlab.engine.start_matlab('MATLAB_R2017b')
-        self.position =[]
-
+        self.position=0
+        self.pos=[0,0,0,0]
         self.panel = wx.Panel(self,size=(700,500))#the back ground panel
         self.makeMenuBar()
         self.makePanel()
@@ -112,16 +117,33 @@ class MainFrame(wx.Frame):
     #     this func use the data to make the pic
     #     """
     #     sys_entry()
-
+    def showpic(self,evt):
+        if self.running:
+            self.pageNum = 0
+            self.position,self.pos = sys_entry(self.pos)
+            try :
+                if self.position == [] :
+                    raise FileExistsError
+                else:
+                    img_temp = wx.Image(r'.\pic\test'+str(self.pageNum)+'.png',wx.BITMAP_TYPE_ANY).ConvertToBitmap()
+                    sb_temp = wx.StaticBitmap(self.panel,-1,img_temp,size=(610,460))
+                    #update the position
+                    self.xvalue_StaticText.SetValue(str(int(self.position[1])))
+                    self.yvalue_StaticText.SetValue(str(int(self.position[0])))
+                    print(self.position)
+                    #time.sleep(1)
+            except FileExistsError:
+                wx.MessageBox("Please do the Start before !")
+        else :
+            self.SetStatusText("Stop")
 
     def OnStartBnt(self,event):
         """
         the pic from the engine diaplay_graph
         """
+        self.running = True
         self.SetStatusText("Working !!!!!")
-        self.pageNum = 0
-        self.position = sys_entry()
-        self.SetStatusText("Finish !!!!!")
+
         # img_temp = wx.Image(r'.\pic\test3.png',wx.BITMAP_TYPE_ANY).ConvertToBitmap()
         # sb_temp = wx.StaticBitmap(self.panel,-1,img_temp,size=(300,300))
         
@@ -132,24 +154,28 @@ class MainFrame(wx.Frame):
         so i change the bnt name and
         i think is great to simplify the function
         """
-        try :
-         if self.position == [] :
-             pass
-         else:
-          img_temp = wx.Image(r'.\pic\test'+str(self.pageNum)+'.png',wx.BITMAP_TYPE_ANY).ConvertToBitmap()
-          sb_temp = wx.StaticBitmap(self.panel,-1,img_temp,size=(610,460))
-          #update the position
-          self.xvalue_StaticText.SetValue(str(int(self.position[self.pageNum][1])))
-          self.yvalue_StaticText.SetValue(str(int(self.position[self.pageNum][0])))
+        if self.running == False:
+            wx.MessageBox("Click the Start!")
+        self.running = False
+        self.SetStatusText("Finish !!!!!")
+        # try :
+        #  if self.position == [] :
+        #      pass
+        #  else:
+        #   img_temp = wx.Image(r'.\pic\test'+str(self.pageNum)+'.png',wx.BITMAP_TYPE_ANY).ConvertToBitmap()
+        #   sb_temp = wx.StaticBitmap(self.panel,-1,img_temp,size=(610,460))
+        #   #update the position
+        #   self.xvalue_StaticText.SetValue(str(int(self.position[self.pageNum][1])))
+        #   self.yvalue_StaticText.SetValue(str(int(self.position[self.pageNum][0])))
 
-          print(self.position[self.pageNum][0])
+        #   print(self.position[self.pageNum][0])
 
-          self.pageNum += 1
-         if self.pageNum >= self.maxPage:
-              wx.MessageBox("This is the last pic,Will show the beginning")
-              self.pageNum = self.pageNum % self.maxPage
-        except FileExistsError:
-              wx.MessageBox("Please do the Start before !")
+        #   self.pageNum += 1
+        #  if self.pageNum >= self.maxPage:
+        #       wx.MessageBox("This is the last pic,Will show the beginning")
+        #       self.pageNum = self.pageNum % self.maxPage
+        # except FileExistsError:
+        #       wx.MessageBox("Please do the Start before !")
 
     def OnCloseMe(self,event):
         self.Close(True)

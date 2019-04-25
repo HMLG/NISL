@@ -1,5 +1,5 @@
 #-*- coding:utf-8 -*-
-from config import THE_ANTENNA_NUM,antenna_list
+from config import THE_ANTENNA_NUM,antenna_list,THE_RESTORE_NUM
 import os
 def dataRestore(position):
     """
@@ -31,7 +31,7 @@ def dataRestore(position):
             with open(dir,'r')as file_out: # this is the data sources
                 file_out.seek(position[antnum],0)
                 # for line in file_out:
-                while count < 50:
+                while count < THE_RESTORE_NUM:
                     line = file_out.readline()
                     sample = line.split('\t')
                     file_in.writelines(sample[0]+'\n')

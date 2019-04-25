@@ -1,6 +1,5 @@
 from config import THE_TIME_INTERVAL,antenna_list,THE_ANTENNA_NUM
 import time
-import preventFromStrangeValue as pfsv
 #the data entry is the input of the data ,and the data from the reader
 #we need RSSI and PHASE ,in the txt is the first and the second colume
 #the antenna can be entend so we used the list to control the number of the metric

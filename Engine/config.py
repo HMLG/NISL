@@ -1,6 +1,7 @@
 THE_ANTENNA_NUM = 4
 THE_EXTRA_RATE = 10 #PROCESS THE DATA PER VOLK
 THE_TIME_INTERVAL = 288000#microsecond
+THE_RESTORE_NUM = 20
 #the antenna list !!the
 ph0 = []
 RSSI0 = []

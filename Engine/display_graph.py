@@ -1,7 +1,8 @@
 #multiprocess
 import time
 from pylab import *
-import threading
+import threading #ahang ???why i use it?
+from multiprocessing import Process
 import os
 #the data process
 import matplotlib
@@ -13,6 +14,8 @@ import data_entry as d_e
 
 import data_pre_trim as d_p_e
 import core_algorithm as ca
+import preventFromStrangeValue as pfsv
+
 print('All packages have been loaded')
 #the axes set
 plt.ion()
@@ -67,6 +70,7 @@ def the_route_volk(count):
     the parameter:
     count the number for the pic the number is 10
     """
+    
     ph = d_p_e.ph_process()
     am = d_p_e.am_process()
     s = ca.basic_signal_construct(am, ph)
@@ -83,24 +87,28 @@ class Threads(threading.Thread):
         print('over')
 
 
-def sys_entry():
+def sys_entry(pos):
     """
     The func works as the system entry
     It is an api to
     """
-    data_entry = Threads()
-    data_entry.start()
-    time.sleep(1)
+    # data_entry = Threads()
+    # data_entry.start()
+    # proc = Process(target=d_e.extra_PHASE_AND_RSSI())
+    # proc.start()
+    pos = pfsv.dataRestore(pos)
+    d_e.extra_PHASE_AND_RSSI()
+    # time.sleep(1)
     ph = d_p_e.ph_process()
     am = d_p_e.am_process()
     position = []
     ca.basic_signal_construct(am,ph)
-    for i in range(3) :
-        print('the routune : '+str(i))
-        position.append(the_route_volk(i))
+    # for i in range(3) :
+    #     print('the routune : '+str(i))
+    position = (the_route_volk(1))
     plt.ioff()
     plt.close()
-    return position
+    return position,pos
 
 if __name__ =='__main__':
     # data_entry = Threads()
@@ -113,4 +121,4 @@ if __name__ =='__main__':
     #     print('the routune')
     #     the_route_volk(i)
     # plt.ioff()
-    sys_entry()
+    sys_entry([0,0,0,0])
