@@ -92,19 +92,9 @@ def sys_entry(pos):
     The func works as the system entry
     It is an api to
     """
-    # data_entry = Threads()
-    # data_entry.start()
-    # proc = Process(target=d_e.extra_PHASE_AND_RSSI())
-    # proc.start()
     pos = pfsv.dataRestore(pos)
     d_e.extra_PHASE_AND_RSSI()
-    # time.sleep(1)
-    ph = d_p_e.ph_process()
-    am = d_p_e.am_process()
     position = []
-    ca.basic_signal_construct(am,ph)
-    # for i in range(3) :
-    #     print('the routune : '+str(i))
     position = (the_route_volk(1))
     plt.ioff()
     plt.close()

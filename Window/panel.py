@@ -119,7 +119,7 @@ class MainFrame(wx.Frame):
     #     sys_entry()
     def showpic(self,evt):
         if self.running:
-            self.pageNum = 0
+            self.pageNum = 1
             self.position,self.pos = sys_entry(self.pos)
             try :
                 if self.position == [] :
