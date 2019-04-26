@@ -101,14 +101,4 @@ def sys_entry(pos):
     return position,pos
 
 if __name__ =='__main__':
-    # data_entry = Threads()
-    # data_entry.start()
-    # ph = d_p_e.ph_process()
-    # am = d_p_e.am_process()
-    # time.sleep(1)
-    # ca.basic_signal_construct(am,ph)
-    # for i in range(5) :
-    #     print('the routune')
-    #     the_route_volk(i)
-    # plt.ioff()
-    sys_entry([0,0,0,0])
+    print(sys_entry([0,0,0,0]))

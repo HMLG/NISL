@@ -7,6 +7,7 @@ sys.path.insert(0,'e:\\WORK\\NISL\\Engine')
 print(sys.path)
 import matlab.engine
 import display_graph
+import reader
 from display_graph import sys_entry
 #import matlab.engine
 # -*- coding: utf-8 -*-  
@@ -38,6 +39,7 @@ class MainFrame(wx.Frame):
         #show the pic number
         self.running = False # the condition 
         self.pageNum = 0
+        self.READER = None
         self.timer = wx.Timer(self)
         self.Bind(wx.EVT_TIMER,self.showpic,self.timer)
         self.timer.Start(5000)
@@ -142,8 +144,8 @@ class MainFrame(wx.Frame):
         the pic from the engine diaplay_graph
         """
         self.running = True
-        self.SetStatusText("Working !!!!!")
-
+        self.SetStatusText("Reader Working !!!!!")
+        self.READER = reader.activeReader()
         # img_temp = wx.Image(r'.\pic\test3.png',wx.BITMAP_TYPE_ANY).ConvertToBitmap()
         # sb_temp = wx.StaticBitmap(self.panel,-1,img_temp,size=(300,300))
         
@@ -156,8 +158,11 @@ class MainFrame(wx.Frame):
         """
         if self.running == False:
             wx.MessageBox("Click the Start!")
-        self.running = False
-        self.SetStatusText("Finish !!!!!")
+        if self.running == True:    
+            self.running = False
+            self.READER.terminate()
+            reader.stroeData(self.READER)
+            self.SetStatusText("Reader Terminate !")
         # try :
         #  if self.position == [] :
         #      pass
