@@ -54,6 +54,10 @@ class MainFrame(wx.Frame):
         self.SetStatusText(("The work directoy is "+os.getcwd()))
 
     def makePanel(self):
+        """
+        set the buttons and other 
+        the pic just for fun.
+        """
         main_Hbox = wx.BoxSizer(wx.HORIZONTAL)
         ##main_hbox is used to contain the pic and buttonsbar
         ##buttonsbar(the veritcal sizer)
@@ -78,10 +82,14 @@ class MainFrame(wx.Frame):
 
         #the button below
         start_Bnt = wx.Button(self.panel,-1,'START')
-        next_Bnt = wx.Button(self.panel,-1,'NEXT')      
+        stop_Bnt = wx.Button(self.panel,-1,'STOP')
+        store_Bnt = wx.Button(self.panel,-1,'STORE')   
+
         bntbar_VStaticboxsizer.Add(start_Bnt,1,flag=wx.EXPAND)
-        bntbar_VStaticboxsizer.Add(next_Bnt,1,flag=wx.EXPAND)
+        bntbar_VStaticboxsizer.Add(stop_Bnt,1,flag=wx.EXPAND)
+        bntbar_VStaticboxsizer.Add(store_Bnt,1,flag=wx.EXPAND)
        
+
         bntbar_VStaticboxsizer.Add((20,40))
         bntbar_VStaticboxsizer.Add(x_coordinate_HBoxSizer,1,wx.EXPAND)
         bntbar_VStaticboxsizer.Add(y_coordinate_HBoxSizer,1,wx.EXPAND)
@@ -104,28 +112,20 @@ class MainFrame(wx.Frame):
         # bind the function here
         self.Bind(wx.EVT_BUTTON,self.OnCloseMe,quit_Bnt)
         self.Bind(wx.EVT_BUTTON,self.OnStartBnt,start_Bnt)
-        self.Bind(wx.EVT_BUTTON,self.OnNextBnt,next_Bnt)
+        self.Bind(wx.EVT_BUTTON,self.OnStopBnt,stop_Bnt)
+        self.Bind(wx.EVT_BUTTON,self.OnStoreBnt,store_Bnt)
         #All distribution here
         self.panel.SetSizer(main_Hbox)
         self.panel.SetBackgroundColour('white')
         self.panel.Fit() 
 
-     #def OnPaint(self,event):
-     #   buffer = wx.ClientDc(self.panel)
-
-    # def OnStartBnt_True(self,event):
-    #     #pass
-    #     """
-    #     this func use the data to make the pic
-    #     """
-    #     sys_entry()
     def showpic(self,evt):
         if self.running:
             self.pageNum = 1
             self.position,self.pos = sys_entry(self.pos)
             try :
                 if self.position == [] :
-                    raise FileExistsError
+                    raise FileExistsError("sys_entry func error!")
                 else:
                     img_temp = wx.Image(r'.\pic\test'+str(self.pageNum)+'.png',wx.BITMAP_TYPE_ANY).ConvertToBitmap()
                     sb_temp = wx.StaticBitmap(self.panel,-1,img_temp,size=(610,460))
@@ -135,6 +135,7 @@ class MainFrame(wx.Frame):
                     print(self.position)
                     #time.sleep(1)
             except FileExistsError:
+                self.SetStatusText("Check the E:\ ,the data lost!")
                 wx.MessageBox("Please do the Start before !")
         else :
             self.SetStatusText("Stop")
@@ -143,13 +144,14 @@ class MainFrame(wx.Frame):
         """
         the pic from the engine diaplay_graph
         """
-        self.running = True
-        self.SetStatusText("Reader Working !!!!!")
-        self.READER = reader.activeReader()
-        # img_temp = wx.Image(r'.\pic\test3.png',wx.BITMAP_TYPE_ANY).ConvertToBitmap()
-        # sb_temp = wx.StaticBitmap(self.panel,-1,img_temp,size=(300,300))
+        if self.running ==True:
+            wx.MessageBox("The system is working now !")
+        else:
+            self.running = True
+            self.SetStatusText("Reader Working !!!!!")
+            self.READER = reader.activeReader()
         
-    def OnNextBnt(self,event):
+    def OnStopBnt(self,event):
         """
         the button should stop the program.
         i don't know how to do
@@ -161,28 +163,27 @@ class MainFrame(wx.Frame):
         if self.running == True:    
             self.running = False
             self.READER.terminate()
-            reader.stroeData(self.READER)
             self.SetStatusText("Reader Terminate !")
-        # try :
-        #  if self.position == [] :
-        #      pass
-        #  else:
-        #   img_temp = wx.Image(r'.\pic\test'+str(self.pageNum)+'.png',wx.BITMAP_TYPE_ANY).ConvertToBitmap()
-        #   sb_temp = wx.StaticBitmap(self.panel,-1,img_temp,size=(610,460))
-        #   #update the position
-        #   self.xvalue_StaticText.SetValue(str(int(self.position[self.pageNum][1])))
-        #   self.yvalue_StaticText.SetValue(str(int(self.position[self.pageNum][0])))
 
-        #   print(self.position[self.pageNum][0])
-
-        #   self.pageNum += 1
-        #  if self.pageNum >= self.maxPage:
-        #       wx.MessageBox("This is the last pic,Will show the beginning")
-        #       self.pageNum = self.pageNum % self.maxPage
-        # except FileExistsError:
-        #       wx.MessageBox("Please do the Start before !")
+    def OnStoreBnt(self,evt):
+        """
+        This func designed to store or sort the data which was catch by reader.
+        Use the storedata() to achieve.
+        storedata() in NISL/Engine/reader.py
+        """
+        pass
+        if self.running == True:
+            wx.MessageBox("STOP before STORE !")
+        else:
+            if os.path.exists('E:/Fre920.625.txt'): # this will be set in the config.py
+                location = reader.stroeData(self.READER)
+                wx.MessageBox("The file in "+location)
+            else:
+                wx.MessageBox("Clike the START or check the reader")
 
     def OnCloseMe(self,event):
+        self.READER.terminate()
+        reader.stroeData(self.READER)
         self.Close(True)
         
     def OnCloseWindow(self,event):
@@ -231,6 +232,8 @@ class MainFrame(wx.Frame):
 
     def OnExit(self, event):
         """Close the frame, terminating the application."""
+        self.READER.terminate()
+        reader.stroeData(self.READER)
         self.Close(True)
 
     def OnHello(self, event):

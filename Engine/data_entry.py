@@ -1,4 +1,4 @@
-from config import THE_TIME_INTERVAL,antenna_list,THE_ANTENNA_NUM
+from config import THE_TIME_INTERVAL,antenna_list,THE_ANTENNA_NUM,THE_DATA_SOURCE
 import time
 #the data entry is the input of the data ,and the data from the reader
 #we need RSSI and PHASE ,in the txt is the first and the second colume
@@ -12,17 +12,16 @@ import time
 
                  
 def extra_PHASE_AND_RSSI():
-    
+    dir = THE_DATA_SOURCE
     for antnum in range(THE_ANTENNA_NUM):
-     ant_num = antnum
-     #dir = r'E:/3-29/1/Antenna'+str(antnum+1)+'.txt'
-     dir = r'E:\4-23\13\seq\Antenna'+str(antnum+1)+'.txt'
+        ant_num = antnum
+        path = dir+'seq\Antenna'+str(antnum+1)+'.txt'
      #dir = r'F:\experience\13\Antennatest'+str(antnum+1)+'.txt'
-     with open(dir,'r')as file:
-         for count in file:
-            temp = (count.split('\t'))
-            antenna_list[ant_num][0].append(float(temp[0]))
-            antenna_list[ant_num][1].append(float(1))
+        with open(path,'r')as file:
+            for count in file:
+                temp = (count.split('\t'))
+                antenna_list[ant_num][0].append(float(temp[0]))
+                antenna_list[ant_num][1].append(float(1))
 
 
 if __name__=='__main__':

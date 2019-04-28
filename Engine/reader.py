@@ -27,6 +27,12 @@ def stroeData(EXIT):
     else:
         os.mkdir(dir+filename)
         shutil.move(dir+'Fre920.625.txt',dir+filename)
+        shutil.move(dir+'Antenna2.txt',dir+filename)
+        shutil.move(dir+'Antenna3.txt',dir+filename)
+        shutil.move(dir+'Antenna4.txt',dir+filename)
+
+    
+    return dir+filename
 
 if __name__=="__main__":
     stroeData(None)
