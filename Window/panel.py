@@ -38,7 +38,7 @@ class MainFrame(wx.Frame):
         super(MainFrame,self).__init__(None,id,title,pos,size,style,name)
         #show the pic number
         self.running = False # the condition 
-        self.pageNum = 0
+        self.model = 0
         self.READER = None
         self.timer = wx.Timer(self)
         self.Bind(wx.EVT_TIMER,self.showpic,self.timer)
@@ -63,10 +63,13 @@ class MainFrame(wx.Frame):
         ##buttonsbar(the veritcal sizer)
        
         #pic_Pnl is used to show the pic 
-        bntbar_Staticbox = wx.StaticBox(self.panel,-1,'Control') 
+        bntbar_Staticbox = wx.StaticBox(self.panel,-1,'Central Panel') 
         bntbar_VStaticboxsizer = wx.StaticBoxSizer(bntbar_Staticbox,wx.VERTICAL)
     
         #the coordination below just for look(read only)
+        location_Staticbox = wx.StaticBox(self.panel,-1,"Position")
+        location_VStaticboxsizer = wx.StaticBoxSizer(location_Staticbox,wx.VERTICAL)
+
         x_StaticText = wx.StaticText(self.panel,-1,'x :->')
         y_StaticText = wx.StaticText(self.panel,-1,'y :->')
         self.xvalue_StaticText = wx.TextCtrl(self.panel,-1,'0',style=wx.TE_READONLY)
@@ -80,19 +83,39 @@ class MainFrame(wx.Frame):
         y_coordinate_HBoxSizer.Add(y_StaticText,1,wx.EXPAND)
         y_coordinate_HBoxSizer.Add(self.yvalue_StaticText,1,wx.EXPAND)
 
+        location_VStaticboxsizer.Add(x_coordinate_HBoxSizer,1,wx.EXPAND)
+        location_VStaticboxsizer.Add(y_coordinate_HBoxSizer,1,wx.EXPAND)
+
+        #the radio Box below
+        selectRadio=["Off-line","Real-Time"]
+        self.model_radiobox=wx.RadioBox(self.panel,-1,label="Model",
+        pos=wx.DefaultPosition,size=wx.DefaultSize,choices=selectRadio,majorDimension=2)
+        
         #the button below
+        controlbar_Staticbox = wx.StaticBox(self.panel,-1,"Control")
+        controlbar_VStaticsizer = wx.StaticBoxSizer(controlbar_Staticbox,wx.VERTICAL)
+        
         start_Bnt = wx.Button(self.panel,-1,'START')
         stop_Bnt = wx.Button(self.panel,-1,'STOP')
-        store_Bnt = wx.Button(self.panel,-1,'STORE')   
+        store_Bnt = wx.Button(self.panel,-1,'STORE')
+        controlbar_VStaticsizer.Add(start_Bnt,1,flag=wx.EXPAND) 
+        controlbar_VStaticsizer.Add(20,5)
+        controlbar_VStaticsizer.Add(stop_Bnt,1,flag=wx.EXPAND)
+        controlbar_VStaticsizer.Add(20,5)
+        controlbar_VStaticsizer.Add(store_Bnt,1,flag=wx.EXPAND)
 
-        bntbar_VStaticboxsizer.Add(start_Bnt,1,flag=wx.EXPAND)
-        bntbar_VStaticboxsizer.Add(stop_Bnt,1,flag=wx.EXPAND)
-        bntbar_VStaticboxsizer.Add(store_Bnt,1,flag=wx.EXPAND)
-       
-
-        bntbar_VStaticboxsizer.Add((20,40))
-        bntbar_VStaticboxsizer.Add(x_coordinate_HBoxSizer,1,wx.EXPAND)
-        bntbar_VStaticboxsizer.Add(y_coordinate_HBoxSizer,1,wx.EXPAND)
+        #set the order below
+        bntbar_VStaticboxsizer.Add(self.model_radiobox,1,flag=wx.EXPAND)
+        bntbar_VStaticboxsizer.Add((20,10))
+        bntbar_VStaticboxsizer.Add(controlbar_VStaticsizer,1,flag=wx.EXPAND)
+        bntbar_VStaticboxsizer.Add((20,10))
+        # bntbar_VStaticboxsizer.Add(start_Bnt,1,flag=wx.EXPAND)
+        # bntbar_VStaticboxsizer.Add(stop_Bnt,1,flag=wx.EXPAND)
+        # bntbar_VStaticboxsizer.Add(store_Bnt,1,flag=wx.EXPAND)
+        bntbar_VStaticboxsizer.Add(location_VStaticboxsizer,1,wx.EXPAND)
+        bntbar_VStaticboxsizer.Add((20,10))
+        # bntbar_VStaticboxsizer.Add(x_coordinate_HBoxSizer,1,wx.EXPAND)
+        # bntbar_VStaticboxsizer.Add(y_coordinate_HBoxSizer,1,wx.EXPAND)
 
         quit_Bnt = wx.Button(self.panel,-1,'Quit')
         bntbar_VStaticboxsizer.Add((20,40))
@@ -121,13 +144,13 @@ class MainFrame(wx.Frame):
 
     def showpic(self,evt):
         if self.running:
-            self.pageNum = 1
+            pageNum = 1
             self.position,self.pos = sys_entry(self.pos)
             try :
                 if self.position == [] :
                     raise FileExistsError("sys_entry func error!")
                 else:
-                    img_temp = wx.Image(r'.\pic\test'+str(self.pageNum)+'.png',wx.BITMAP_TYPE_ANY).ConvertToBitmap()
+                    img_temp = wx.Image(r'.\pic\test'+str(pageNum)+'.png',wx.BITMAP_TYPE_ANY).ConvertToBitmap()
                     sb_temp = wx.StaticBitmap(self.panel,-1,img_temp,size=(610,460))
                     #update the position
                     self.xvalue_StaticText.SetValue(str(int(self.position[1])))
@@ -144,13 +167,17 @@ class MainFrame(wx.Frame):
         """
         the pic from the engine diaplay_graph
         """
+        self.model = self.model_radiobox.GetSelection()
         if self.running ==True:
             wx.MessageBox("The system is working now !")
         else:
             self.running = True
-            self.SetStatusText("Reader Working !!!!!")
-            self.READER = reader.activeReader()
-        
+            if self.model:
+                self.READER = reader.activeReader()
+                self.SetStatusText("Reader Working !!!!!")
+            else:
+                self.SetStatusText("Offline Working !!!!!")
+   
     def OnStopBnt(self,event):
         """
         the button should stop the program.
@@ -162,8 +189,10 @@ class MainFrame(wx.Frame):
             wx.MessageBox("Click the Start!")
         if self.running == True:    
             self.running = False
-            self.READER.terminate()
-            self.SetStatusText("Reader Terminate !")
+            if self.model:
+                self.READER.terminate()
+                self.SetStatusText("Reader Terminate !")
+            self.SetStatusText("System Terminate !")
 
     def OnStoreBnt(self,evt):
         """
@@ -172,7 +201,7 @@ class MainFrame(wx.Frame):
         storedata() in NISL/Engine/reader.py
         """
         pass
-        if self.running == True:
+        if self.running == True :
             wx.MessageBox("STOP before STORE !")
         else:
             if os.path.exists('E:/Fre920.625.txt'): # this will be set in the config.py
@@ -182,9 +211,12 @@ class MainFrame(wx.Frame):
                 wx.MessageBox("Clike the START or check the reader")
 
     def OnCloseMe(self,event):
-        self.READER.terminate()
-        reader.stroeData(self.READER)
-        self.Close(True)
+        if self.running == True and self.model:
+            self.READER.terminate()
+            reader.stroeData(self.READER)
+            self.Close(True)
+        else:
+            self.Close(True)
         
     def OnCloseWindow(self,event):
         self.Destroy()
@@ -232,8 +264,9 @@ class MainFrame(wx.Frame):
 
     def OnExit(self, event):
         """Close the frame, terminating the application."""
-        self.READER.terminate()
-        reader.stroeData(self.READER)
+        if self.running == True and self.model:
+            self.READER.terminate()
+            reader.stroeData(self.READER)
         self.Close(True)
 
     def OnHello(self, event):
