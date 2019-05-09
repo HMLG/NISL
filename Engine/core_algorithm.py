@@ -9,7 +9,7 @@ DEG2RAD = np.pi/180
 RAD2DEG = 180/np.pi
 
 #the frequence
-FRE=924.375*pow(10,6)
+FRE=920.625*pow(10,6)
 C=3*(10**8)
 Lamuda=C/FRE
 

@@ -35,8 +35,8 @@ def display(Z,pos,i):
     plt.clf()
 
     plt.title('Indoor Location System')
-    plt.xlabel("X  0.8cm/pixel")
-    plt.ylabel("Y  0.8cm/pixel")
+    plt.xlabel("X  1.0cm/pixel")
+    plt.ylabel("Y  1.0cm/pixel")
     def f(z): 
         """
         This function just set the Z to the Z axes,
@@ -53,10 +53,10 @@ def display(Z,pos,i):
     crb = plt.colorbar(shrink=.55)
     crb.set_ticklabels(["5%","20%","30%","40%","50%","60%","70%","95%","99%"])
     # C = contour(X, Y, f(Z), 8, colors='black', linewidth=0.01)
-    plt.scatter(antX, antY, color='cyan', marker='^')
+    plt.scatter(antX, antY, color='black', marker='^')
     plt.scatter(pos[1],pos[0]-2,color='black',marker='*')
-    plt.annotate('Target',xy=(pos[1],pos[0]-4),xytext=(pos[1]-20,pos[0]-22),arrowprops=dict(facecolor='black',headwidth=0.1,width=0.01, shrink=0.01))
-    plt.annotate('Antenna Array',xy=(antX[0],antY[0]+2),xytext=(antX[0]+20,antY[0]+22),arrowprops=dict(facecolor='black',headwidth=0.1,width=0.01, shrink=0.01))
+    plt.annotate('Target',xy=(pos[1],pos[0]-4),xytext=(pos[1]-20,pos[0]-22),arrowprops=dict(facecolor='black',headwidth=0.1,width=0.01, shrink=0.01),fontsize=16)
+    plt.annotate('Antenna Array',xy=(antX[0],antY[0]+2),xytext=(antX[0]+20,antY[0]+22),arrowprops=dict(facecolor='black',headwidth=0.1,width=0.01, shrink=0.01),fontsize=16)
     plt.savefig('./pic/test'+str(i)+'.png')#save the pic as the source to the UI 
 
     #show()

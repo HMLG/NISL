@@ -3,6 +3,7 @@ THE_EXTRA_RATE = 10 #PROCESS THE DATA PER VOLK
 THE_TIME_INTERVAL = 288000#microsecond
 THE_RESTORE_NUM = 20
 THE_DATA_SOURCE = r'E:/'#reader receive the data, and store the data in path
+THE_MATLAB_DATA = r"E:/matlab/"
 THE_STATIC_DATA = r''#input the test data path 
 #the antenna list !!the
 ph0 = []

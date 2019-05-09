@@ -9,6 +9,7 @@ import matlab.engine
 import display_graph
 import reader
 from display_graph import sys_entry
+from config import THE_MATLAB_DATA
 #import matlab.engine
 # -*- coding: utf-8 -*-  
 class TheApp(wx.App):
@@ -44,6 +45,8 @@ class MainFrame(wx.Frame):
         self.Bind(wx.EVT_TIMER,self.showpic,self.timer)
         self.timer.Start(5000)
         #the matlab engine crash so use my algorithm
+        self.engine = matlab.engine.start_matlab('MATLAB_R2017b')
+
         #self.eng = matlab.engine.start_matlab('MATLAB_R2017b')
         self.position=0
         self.pos=[0,0,0,0]
@@ -91,31 +94,39 @@ class MainFrame(wx.Frame):
         self.model_radiobox=wx.RadioBox(self.panel,-1,label="Model",
         pos=wx.DefaultPosition,size=wx.DefaultSize,choices=selectRadio,majorDimension=2)
         
-        #the button below
+        #the function button below
+        functionbar_Staticbox = wx.StaticBox(self.panel,-1,"Function")
+        functionbar_VStaticsizer = wx.StaticBoxSizer(functionbar_Staticbox,wx.VERTICAL)
+        store_Bnt = wx.Button(self.panel,-1,'STORE')
+
+        functionbar_VStaticsizer.Add(20,5)
+        functionbar_VStaticsizer.Add(store_Bnt,1,flag=wx.EXPAND)
+        functionbar_VStaticsizer.Add(20,5)
+
+        #the Control button below
         controlbar_Staticbox = wx.StaticBox(self.panel,-1,"Control")
         controlbar_VStaticsizer = wx.StaticBoxSizer(controlbar_Staticbox,wx.VERTICAL)
         
         start_Bnt = wx.Button(self.panel,-1,'START')
         stop_Bnt = wx.Button(self.panel,-1,'STOP')
-        store_Bnt = wx.Button(self.panel,-1,'STORE')
+
+        controlbar_VStaticsizer.Add(20,5)
         controlbar_VStaticsizer.Add(start_Bnt,1,flag=wx.EXPAND) 
         controlbar_VStaticsizer.Add(20,5)
         controlbar_VStaticsizer.Add(stop_Bnt,1,flag=wx.EXPAND)
-        controlbar_VStaticsizer.Add(20,5)
-        controlbar_VStaticsizer.Add(store_Bnt,1,flag=wx.EXPAND)
+        controlbar_VStaticsizer.Add(20,5)  
 
         #set the order below
+
         bntbar_VStaticboxsizer.Add(self.model_radiobox,1,flag=wx.EXPAND)
         bntbar_VStaticboxsizer.Add((20,10))
         bntbar_VStaticboxsizer.Add(controlbar_VStaticsizer,1,flag=wx.EXPAND)
         bntbar_VStaticboxsizer.Add((20,10))
-        # bntbar_VStaticboxsizer.Add(start_Bnt,1,flag=wx.EXPAND)
-        # bntbar_VStaticboxsizer.Add(stop_Bnt,1,flag=wx.EXPAND)
-        # bntbar_VStaticboxsizer.Add(store_Bnt,1,flag=wx.EXPAND)
+        bntbar_VStaticboxsizer.Add(functionbar_VStaticsizer,1,wx.EXPAND)
+        bntbar_VStaticboxsizer.Add((20,10))
         bntbar_VStaticboxsizer.Add(location_VStaticboxsizer,1,wx.EXPAND)
         bntbar_VStaticboxsizer.Add((20,10))
-        # bntbar_VStaticboxsizer.Add(x_coordinate_HBoxSizer,1,wx.EXPAND)
-        # bntbar_VStaticboxsizer.Add(y_coordinate_HBoxSizer,1,wx.EXPAND)
+
 
         quit_Bnt = wx.Button(self.panel,-1,'Quit')
         bntbar_VStaticboxsizer.Add((20,40))
@@ -123,10 +134,10 @@ class MainFrame(wx.Frame):
 
         #the pics show here
         
-        img_test = wx.Image(r'.\pic\8.jpg',wx.BITMAP_TYPE_ANY)
+        img_test = wx.Image(r'.\pic\9.jpg',wx.BITMAP_TYPE_ANY)
         w = img_test.GetWidth()
         h = img_test.GetHeight()
-        img_test = img_test.Scale(w/4,h/4).ConvertToBitmap()
+        img_test = img_test.Scale(w*1.1,h*1.1).ConvertToBitmap()
         sb_test = wx.StaticBitmap(self.panel,-1,img_test,size=(300,300))
         #the main_Hbox add all elements
         main_Hbox.Add(sb_test,3,wx.ALL,10)
@@ -146,6 +157,8 @@ class MainFrame(wx.Frame):
         if self.running:
             pageNum = 1
             self.position,self.pos = sys_entry(self.pos)
+            DOA = self.engine.DOA_Freespace(THE_MATLAB_DATA)
+            print(DOA)
             try :
                 if self.position == [] :
                     raise FileExistsError("sys_entry func error!")
@@ -154,7 +167,7 @@ class MainFrame(wx.Frame):
                     sb_temp = wx.StaticBitmap(self.panel,-1,img_temp,size=(610,460))
                     #update the position
                     self.xvalue_StaticText.SetValue(str(int(self.position[1])))
-                    self.yvalue_StaticText.SetValue(str(int(self.position[0])))
+                    self.yvalue_StaticText.SetValue(str(int(self.position[0]*DOA/100)))
                     print(self.position)
                     #time.sleep(1)
             except FileExistsError:
@@ -219,6 +232,7 @@ class MainFrame(wx.Frame):
             self.Close(True)
         
     def OnCloseWindow(self,event):
+        self.engine.quit()
         self.Destroy()
 
     def makeMenuBar(self):
@@ -232,7 +246,7 @@ class MainFrame(wx.Frame):
         # The "\t..." syntax defines an accelerator key that also triggers
         # the same event
         helloItem = fileMenu.Append(1,
-                                    "&Hello...\tCtrl-H",
+                                    "&Hello \tCtrl-H",
                                     "Help string shown in status bar for this menu item")
         fileMenu.AppendSeparator()
         # When using a stock ID we don't need to specify the menu item's
@@ -267,16 +281,18 @@ class MainFrame(wx.Frame):
         if self.running == True and self.model:
             self.READER.terminate()
             reader.stroeData(self.READER)
+            self.engine.quit()
         self.Close(True)
 
     def OnHello(self, event):
         """Say hello to the user."""
-        wx.MessageBox("Hello again from wxPython")
+        wx.MessageBox("Welcome to use it, ckeck the mode and start ",
+                        "Just to show !")
 
     def OnAbout(self, event):
         """Display an About Dialog"""
-        wx.MessageBox("This is a wxPython Hello World sample",
-                      "About Hello World 2",
+        wx.MessageBox("This is a location system",
+                      "power by elision",
                       wx.OK|wx.ICON_INFORMATION)
 
 if __name__ == '__main__':
